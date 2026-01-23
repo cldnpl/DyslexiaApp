@@ -12,6 +12,7 @@ struct ActionButton: View {
     let title: String
     let description: String
     let action: () -> Void
+    @StateObject private var settings = AppSettings.shared
     
     private let accentBlue = Color(red: 65/255, green: 72/255, blue: 112/255)
     
@@ -19,16 +20,16 @@ struct ActionButton: View {
         Button(action: action) {
             VStack(spacing: 12) {
                 Image(systemName: iconName)
-                    .font(.system(size: 44))
+                    .font(.system(size: settings.textSize * 2.75))
                     .foregroundColor(accentBlue)
                 
                 Text(title)
-                    .font(.headline.bold())
-                    .foregroundColor(.black)
+                    .font(.app(size: settings.textSize * 1.0625, weight: .bold, dyslexia: settings.dyslexiaFont))
+                    .foregroundColor(.primary)
                     .multilineTextAlignment(.center)
                 
                 Text(description)
-                    .font(.subheadline)
+                    .font(.app(size: settings.textSize * 0.9375, weight: settings.boldText ? .bold : .regular, dyslexia: settings.dyslexiaFont))
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
             }
@@ -37,9 +38,9 @@ struct ActionButton: View {
             .padding(.horizontal, 20)
             .background(
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(Color.white)
+                    .fill(Color(uiColor: .secondarySystemGroupedBackground))
             )
-            .shadow(color: .black.opacity(0.08), radius: 8, x: 0, y: 2)
+            .shadow(color: Color.black.opacity(settings.isDarkMode ? 0.3 : 0.08), radius: 8, x: 0, y: 2)
         }
         .buttonStyle(.plain)
         .padding(.horizontal, 24)

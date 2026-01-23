@@ -12,19 +12,20 @@ struct SourceSelectionSheet: View {
     @Binding var showCamera: Bool
     @Binding var showPhotoPicker: Bool
     @Binding var showDocumentPicker: Bool
+    @StateObject private var settings = AppSettings.shared
     
     var body: some View {
         VStack(spacing: 0) {
             // Header
             HStack {
                 Text("Choose a source")
-                    .font(.largeTitle.bold())
+                    .font(.app(size: settings.textSize * 2.125, weight: .bold, dyslexia: settings.dyslexiaFont))
                 Spacer()
                 Button(action: {
                     isPresented = false
                 }) {
                     Image(systemName: "xmark.circle.fill")
-                        .font(.title2)
+                        .font(.system(size: settings.textSize * 1.375))
                         .foregroundColor(.gray)
                 }
             }
@@ -46,16 +47,16 @@ struct SourceSelectionSheet: View {
                 }) {
                     HStack(spacing: 20) {
                         Image(systemName: "camera.fill")
-                            .font(.title)
-                            .foregroundColor(.blue)
+                            .font(.system(size: settings.textSize * 1.75))
+                            .foregroundColor(settings.isDarkMode ? .primary : .blue)
                             .frame(width: 50)
                         
                         VStack(alignment: .leading, spacing: 5) {
                             Text("Camera")
-                                .font(.headline)
+                                .font(.app(size: settings.textSize * 1.0625, weight: .bold, dyslexia: settings.dyslexiaFont))
                                 .foregroundColor(.primary)
                             Text("Scan your text live")
-                                .font(.subheadline)
+                                .font(.app(size: settings.textSize * 0.9375, weight: settings.boldText ? .bold : .regular, dyslexia: settings.dyslexiaFont))
                                 .foregroundColor(.secondary)
                         }
                         
@@ -79,16 +80,16 @@ struct SourceSelectionSheet: View {
                 }) {
                     HStack(spacing: 20) {
                         Image(systemName: "photo.on.rectangle")
-                            .font(.title)
-                            .foregroundColor(.blue)
+                            .font(.system(size: settings.textSize * 1.75))
+                            .foregroundColor(settings.isDarkMode ? .primary : .blue)
                             .frame(width: 50)
                         
                         VStack(alignment: .leading, spacing: 5) {
                             Text("Gallery")
-                                .font(.headline)
+                                .font(.app(size: settings.textSize * 1.0625, weight: .bold, dyslexia: settings.dyslexiaFont))
                                 .foregroundColor(.primary)
                             Text("Choose an existing photo")
-                                .font(.subheadline)
+                                .font(.app(size: settings.textSize * 0.9375, weight: settings.boldText ? .bold : .regular, dyslexia: settings.dyslexiaFont))
                                 .foregroundColor(.secondary)
                         }
                         
@@ -112,16 +113,16 @@ struct SourceSelectionSheet: View {
                 }) {
                     HStack(spacing: 20) {
                         Image(systemName: "folder.fill")
-                            .font(.title)
-                            .foregroundColor(.blue)
+                            .font(.system(size: settings.textSize * 1.75))
+                            .foregroundColor(settings.isDarkMode ? .primary : .blue)
                             .frame(width: 50)
                         
                         VStack(alignment: .leading, spacing: 5) {
                             Text("Files")
-                                .font(.headline)
+                                .font(.app(size: settings.textSize * 1.0625, weight: .bold, dyslexia: settings.dyslexiaFont))
                                 .foregroundColor(.primary)
                             Text("Choose a document")
-                                .font(.subheadline)
+                                .font(.app(size: settings.textSize * 0.9375, weight: settings.boldText ? .bold : .regular, dyslexia: settings.dyslexiaFont))
                                 .foregroundColor(.secondary)
                         }
                         

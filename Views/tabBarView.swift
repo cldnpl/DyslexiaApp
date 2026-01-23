@@ -9,6 +9,7 @@ import SwiftUI
 
 struct tabBarView: View {
     @State private var selectedTab = 0
+    @StateObject private var settings = AppSettings.shared
     
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -23,7 +24,7 @@ struct tabBarView: View {
             // 2 tab - Saved
             Text("Saved page")
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color(uiColor: .systemGroupedBackground))
+                .background(Color(uiColor: .systemBackground))
                 .tabItem {
                     Image(systemName: "bookmark.fill")
                     Text("Saved")
@@ -38,10 +39,9 @@ struct tabBarView: View {
                 }
                 .tag(2)
         }
-        .tint(Color(.blue))
-        .toolbarBackground(Color.white, for: .tabBar)
+        .tint(settings.isDarkMode ? .primary : .blue)
+        .toolbarBackground(Color(uiColor: .systemBackground), for: .tabBar)
         .toolbarBackground(.visible, for: .tabBar)
-        .background(Color(uiColor: .systemGroupedBackground))
     }
        
 }

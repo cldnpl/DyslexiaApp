@@ -12,10 +12,11 @@ struct TextTapView: View {
     let text: String
     let highlightedText: AttributedString
     let onTap: (Int) -> Void
+    @StateObject private var settings = AppSettings.shared
     
     var body: some View {
         Text(highlightedText)
-            .font(.system(size: 17))
+            .font(.app(size: settings.textSize, weight: settings.boldText ? .bold : .regular, dyslexia: settings.dyslexiaFont))
             .frame(maxWidth: .infinity, alignment: .topLeading)
             .padding(10)
             .overlay(
@@ -76,4 +77,3 @@ struct TextTapView: View {
         }
     }
 }
-

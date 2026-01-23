@@ -9,6 +9,7 @@ import SwiftUI
 
 struct buttonsView: View {
     @Binding var selectedTab: Int
+    @StateObject private var settings = AppSettings.shared
     @State private var showSourceSelection = false
     @State private var showCamera = false
     @State private var showPhotoPicker = false
@@ -27,16 +28,14 @@ struct buttonsView: View {
                     HStack {
                         VStack(alignment: .leading, spacing: 12) {
                             Image(systemName: "camera")
-                                .font(.system(size: 70))
-                                .foregroundColor(.blue)
+                                .font(.system(size: settings.textSize * 4.375))
+                                .foregroundColor(settings.isDarkMode ? .primary : .blue)
                             Text("Scan your text")
-                                .font(.system(size: 40).bold())
-                                .font(.largeTitle.bold())
-                                .foregroundColor(.black)
+                                .font(.app(size: settings.textSize * 1.75, weight: .bold, dyslexia: settings.dyslexiaFont))
+                                .foregroundColor(.primary)
                             Text("Open the camera, select a photo or a file...and let the app help you")
-                                .font(.system(size: 15))
-                                .font(.subheadline)
-                                .foregroundColor(Color.gray.opacity(0.6))
+                                .font(.app(size: settings.textSize * 0.9375, weight: settings.boldText ? .bold : .regular, dyslexia: settings.dyslexiaFont))
+                                .foregroundColor(.secondary)
                                 .multilineTextAlignment(.leading)
                         }
                         Spacer()
@@ -46,7 +45,7 @@ struct buttonsView: View {
                     .padding(.horizontal, 24)
                     .background(
                         RoundedRectangle(cornerRadius: 20, style: .continuous)
-                            .fill(Color.white)
+                            .fill(Color(uiColor: .secondarySystemGroupedBackground))
                             .shadow(radius: 5)
                     )
                 }
@@ -58,16 +57,14 @@ struct buttonsView: View {
                     HStack {
                         VStack(alignment: .leading, spacing: 12) {
                             Image(systemName: "pencil.and.scribble")
-                                .font(.system(size: 70))
-                                .foregroundColor(.blue)
+                                .font(.system(size: settings.textSize * 4.375))
+                                .foregroundColor(settings.isDarkMode ? .primary : .blue)
                             Text("Insert manually")
-                                .font(.system(size: 40).bold())
-                                .font(.largeTitle.bold())
-                                .foregroundColor(.black)
+                                .font(.app(size: settings.textSize * 1.75, weight: .bold, dyslexia: settings.dyslexiaFont))
+                                .foregroundColor(.primary)
                             Text("Type and correct your test by yourself")
-                                .font(.subheadline)
-                                .font(.system(size: 15))
-                                .foregroundColor(Color.gray.opacity(0.6))
+                                .font(.app(size: settings.textSize * 0.9375, weight: settings.boldText ? .bold : .regular, dyslexia: settings.dyslexiaFont))
+                                .foregroundColor(.secondary)
                                 .multilineTextAlignment(.leading)
                         }
                         Spacer()
@@ -77,7 +74,7 @@ struct buttonsView: View {
                     .padding(.horizontal, 24)
                     .background(
                         RoundedRectangle(cornerRadius: 20, style: .continuous)
-                            .fill(Color.white)
+                            .fill(Color(uiColor: .secondarySystemGroupedBackground))
                             .shadow(radius: 5)
                     )
                 }

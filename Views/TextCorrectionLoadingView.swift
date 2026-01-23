@@ -12,6 +12,7 @@ struct TextCorrectionLoadingView: View {
     @Binding var isPresented: Bool
     @Binding var selectedTab: Int
     @State var originalText: String
+    @StateObject private var settings = AppSettings.shared
     @State private var correctedText: String = ""
     @State private var isCorrecting: Bool = true
     @State private var progressMessage: String = "Correcting your text..."
@@ -32,25 +33,25 @@ struct TextCorrectionLoadingView: View {
                     .frame(width: 120, height: 120)
                 
                 Image(systemName: "sparkles")
-                    .font(.system(size: 50))
-                    .foregroundColor(Color(.blue))
+                    .font(.system(size: settings.textSize * 3.125))
+                    .foregroundColor(settings.isDarkMode ? .primary : .blue)
                     .symbolEffect(.pulse, options: .repeating)
             }
             
             // Message
             VStack(spacing: 10) {
                 Text("Correction in progress...")
-                    .font(.title.bold())
-                    .foregroundColor(.black)
+                    .font(.app(size: settings.textSize * 1.75, weight: .bold, dyslexia: settings.dyslexiaFont))
+                    .foregroundColor(.primary)
                 
                 Text(progressMessage)
-                    .font(.subheadline)
+                    .font(.app(size: settings.textSize * 0.9375, weight: settings.boldText ? .bold : .regular, dyslexia: settings.dyslexiaFont))
                     .foregroundColor(.gray)
             }
             
             // Animated progressbar
             ProgressView(value: progressValue, total: 1.0)
-                .progressViewStyle(LinearProgressViewStyle(tint: Color.blue))
+                .progressViewStyle(LinearProgressViewStyle(tint: settings.isDarkMode ? .primary : .blue))
                 .scaleEffect(x: 1, y: 2, anchor: .center)
                 .padding(.horizontal, 50)
                 .animation(.linear(duration: 0.3), value: progressValue)
@@ -58,7 +59,7 @@ struct TextCorrectionLoadingView: View {
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.white)
+        .background(Color(uiColor: .systemBackground))
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .onAppear {

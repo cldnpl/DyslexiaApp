@@ -9,6 +9,70 @@ import Foundation
 import SwiftUI
 import Combine
 
+enum AppFont: String, CaseIterable {
+    case system = "System"
+    case openDyslexic = "OpenDyslexic"
+    case helveticaNeue = "Helvetica Neue"
+    case arial = "Arial"
+    case timesNewRoman = "Times New Roman"
+    case courierNew = "Courier New"
+    case georgia = "Georgia"
+    case trebuchetMS = "Trebuchet MS"
+    case verdana = "Verdana"
+    
+    var displayName: String {
+        return self.rawValue
+    }
+    
+    var fontName: String? {
+        switch self {
+        case .system:
+            return nil
+        case .openDyslexic:
+            return "OpenDyslexic-Regular"
+        default:
+            return self.rawValue
+        }
+    }
+    
+    var boldFontName: String? {
+        switch self {
+        case .system:
+            return nil
+        case .openDyslexic:
+            return "OpenDyslexic-Bold"
+        default:
+            return self.rawValue
+        }
+    }
+    
+    // Verifica se il font è disponibile nel sistema
+    func isAvailable() -> Bool {
+        if self == .system {
+            return true
+        }
+        
+        // Per OpenDyslexic, prova tutti i nomi possibili
+        if self == .openDyslexic {
+            let possibleNames = [
+                "OpenDyslexic-Regular",
+                "OpenDyslexic Regular",
+                "OpenDyslexicRegular",
+                "OpenDyslexic"
+            ]
+            return possibleNames.contains { UIFont(name: $0, size: 17) != nil }
+        }
+        
+        // Per gli altri font, prova con fontName e rawValue
+        if let fontName = self.fontName {
+            if UIFont(name: fontName, size: 17) != nil {
+                return true
+            }
+        }
+        return UIFont(name: self.rawValue, size: 17) != nil
+    }
+}
+
 class AppSettings: ObservableObject {
     static let shared = AppSettings()
     
@@ -18,9 +82,19 @@ class AppSettings: ObservableObject {
         }
     }
     
-    @Published var dyslexiaFont: Bool {
+    @Published var selectedFont: AppFont {
         didSet {
-            UserDefaults.standard.set(dyslexiaFont, forKey: "dyslexiaFont")
+            UserDefaults.standard.set(selectedFont.rawValue, forKey: "selectedFont")
+        }
+    }
+    
+    // Manteniamo per retrocompatibilità
+    var dyslexiaFont: Bool {
+        get {
+            return selectedFont != .system
+        }
+        set {
+            selectedFont = newValue ? .openDyslexic : .system
         }
     }
     
@@ -52,11 +126,18 @@ class AppSettings: ObservableObject {
         // Carica isDarkMode da UserDefaults, se non esiste usa false (default)
         self.isDarkMode = UserDefaults.standard.bool(forKey: "isDarkMode")
         
-        // Carica dyslexiaFont da UserDefaults, se non esiste usa false (default)
-        self.dyslexiaFont = UserDefaults.standard.bool(forKey: "dyslexiaFont")
+        // Carica selectedFont da UserDefaults, con fallback per retrocompatibilità
+        if let fontString = UserDefaults.standard.string(forKey: "selectedFont"),
+           let font = AppFont(rawValue: fontString) {
+            self.selectedFont = font
+        } else {
+            // Retrocompatibilità: se esiste il vecchio valore dyslexiaFont
+            let oldDyslexiaFont = UserDefaults.standard.bool(forKey: "dyslexiaFont")
+            self.selectedFont = oldDyslexiaFont ? .openDyslexic : .system
+        }
         
-        // Carica textSize da UserDefaults, se non esiste usa 16.0 (default)
-        self.textSize = UserDefaults.standard.object(forKey: "textSize") as? CGFloat ?? 16.0
+        // Carica textSize da UserDefaults, se non esiste usa 17.0 (default)
+        self.textSize = UserDefaults.standard.object(forKey: "textSize") as? CGFloat ?? 17.0
         
         // Carica voiceOverEnabled da UserDefaults, se non esiste usa false (default)
         self.voiceOverEnabled = UserDefaults.standard.bool(forKey: "voiceOverEnabled")

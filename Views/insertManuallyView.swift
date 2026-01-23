@@ -10,6 +10,7 @@ import SwiftUI
 struct InsertManuallyView: View {
     @Binding var isPresented: Bool
     @Binding var selectedTab: Int
+    @StateObject private var settings = AppSettings.shared
     @State private var inputText: String = ""
     @FocusState private var isTextFieldFocused: Bool
     @Environment(\.dismiss) private var dismiss
@@ -20,7 +21,7 @@ struct InsertManuallyView: View {
             
             // Etichetta/Titolo
             Text("Write your text here:")
-                .font(.largeTitle.bold())
+                .font(.app(size: settings.textSize * 2.125, weight: .bold, dyslexia: settings.dyslexiaFont))
                 .foregroundColor(.primary)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 32)
@@ -30,15 +31,15 @@ struct InsertManuallyView: View {
             ZStack(alignment: .topLeading) {
                 // Background grigio chiaro per il riquadro con bordo
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(Color(red: 248/255, green: 249/255, blue: 252/255))
+                    .fill(Color(uiColor: .secondarySystemGroupedBackground))
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                            .stroke(Color(uiColor: .separator), lineWidth: 1)
                     )
                     .frame(minHeight: 300)
                 
                 TextEditor(text: $inputText)
-                    .font(.body)
+                    .font(.app(size: settings.textSize, weight: settings.boldText ? .bold : .regular, dyslexia: settings.dyslexiaFont))
                     .focused($isTextFieldFocused)
                     .frame(minHeight: 300)
                     .scrollContentBackground(.hidden)
@@ -55,11 +56,11 @@ struct InsertManuallyView: View {
                 textToRead: inputText
             )) {
                 Text("Done")
-                    .font(.title2.bold())
+                    .font(.app(size: settings.textSize * 1.375, weight: .bold, dyslexia: settings.dyslexiaFont))
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 16)
-                    .background(Color(.blue))
+                    .background(settings.isDarkMode ? Color.primary : Color(.blue))
                     .cornerRadius(30)
                     .shadow(radius: 5)
                     .padding(.horizontal, 100)
@@ -67,7 +68,7 @@ struct InsertManuallyView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.white)
+        .background(Color(uiColor: .systemBackground))
         .gesture(
             DragGesture(minimumDistance: 50)
                 .onEnded { value in
@@ -85,7 +86,7 @@ struct InsertManuallyView: View {
                         dismiss()
                     }) {
                         Image(systemName: "chevron.left")
-                            .foregroundColor(.black)
+                            .foregroundColor(.primary)
                     }
                 }
             }
