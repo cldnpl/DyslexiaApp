@@ -27,25 +27,24 @@ struct ReadingView: View {
             // Slider per la velocità
             HStack(spacing: 15) {
                 Image(systemName: "tortoise.fill")
-                    .foregroundColor(Color(red: 65/255, green: 72/255, blue: 112/255))
+                    .foregroundColor(Color(.blue))
                     .font(.title2)
                 
                 Slider(value: $readingSpeed, in: 0.0...1.0)
-                    .tint(Color(red: 65/255, green: 72/255, blue: 112/255))
+                    .tint(Color(.blue))
                     .onChange(of: readingSpeed) { newValue in
                         // Cambia la velocità e riprende dalla posizione corrente se stava leggendo
                         speechSynthesizer.changeSpeed(rate: speechRate)
                     }
+                    .padding(.top, 5)
+
                 
                 Image(systemName: "hare.fill")
-                    .foregroundColor(Color(red: 65/255, green: 72/255, blue: 112/255))
+                    .foregroundColor(Color(.blue))
                     .font(.title2)
             }
-            .shadow(radius: 10)
             .padding(.horizontal, 30)
             .padding(.top, 20)
-            
-            Spacer()
             
             // Card con il testo - grande come in insertManuallyView
             ZStack(alignment: .topLeading) {
@@ -55,6 +54,7 @@ struct ReadingView: View {
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)
                             .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+
                     )
                     .frame(maxWidth: 350)
                 
@@ -71,7 +71,6 @@ struct ReadingView: View {
                 .frame(maxWidth: 350)
             }
             
-            
             Spacer()
             
             // Controlli di riproduzione
@@ -82,10 +81,11 @@ struct ReadingView: View {
                 }) {
                     Image(systemName: "bookmark.fill")
                         .font(.title2)
-                        .foregroundColor(.black)
+                        .foregroundColor(.blue)
                         .frame(width: 50, height: 50)
                         .background(Color(red: 248/255, green: 249/255, blue: 252/255))
                         .clipShape(Circle())
+                        .shadow(radius: 5)
                 }
                 
                 // Pulsante Play/Pause
@@ -101,10 +101,12 @@ struct ReadingView: View {
                 }) {
                     Image(systemName: speechSynthesizer.isPlaying ? "pause.fill" : "play.fill")
                         .font(.title)
-                        .foregroundColor(.black)
+                        .foregroundColor(.blue)
                         .frame(width: 70, height: 70)
                         .background(Color(red: 248/255, green: 249/255, blue: 252/255))
                         .clipShape(Circle())
+                        .shadow(radius: 5)
+
                 }
                 
                 // Pulsante Ricomincia da capo
@@ -115,10 +117,12 @@ struct ReadingView: View {
                 }) {
                     Image(systemName: "arrow.counterclockwise")
                         .font(.title2)
-                        .foregroundColor(.black)
+                        .foregroundColor(.blue)
                         .frame(width: 50, height: 50)
                         .background(Color(red: 248/255, green: 249/255, blue: 252/255))
                         .clipShape(Circle())
+                        .shadow(radius: 5)
+
                 }
             }
             .padding(.bottom, 40)

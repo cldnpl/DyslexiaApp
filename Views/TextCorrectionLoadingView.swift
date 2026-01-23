@@ -33,7 +33,7 @@ struct TextCorrectionLoadingView: View {
                 
                 Image(systemName: "sparkles")
                     .font(.system(size: 50))
-                    .foregroundColor(Color(red: 65/255, green: 72/255, blue: 112/255))
+                    .foregroundColor(Color(.blue))
                     .symbolEffect(.pulse, options: .repeating)
             }
             
@@ -50,7 +50,7 @@ struct TextCorrectionLoadingView: View {
             
             // Animated progressbar
             ProgressView(value: progressValue, total: 1.0)
-                .progressViewStyle(LinearProgressViewStyle(tint: Color(red: 65/255, green: 72/255, blue: 112/255)))
+                .progressViewStyle(LinearProgressViewStyle(tint: Color.blue))
                 .scaleEffect(x: 1, y: 2, anchor: .center)
                 .padding(.horizontal, 50)
                 .animation(.linear(duration: 0.3), value: progressValue)

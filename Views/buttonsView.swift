@@ -21,7 +21,6 @@ struct buttonsView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
-                Spacer()
                 
                 // Card: Scan your text
                 Button(action: { showSourceSelection = true }) {
@@ -48,8 +47,8 @@ struct buttonsView: View {
                     .background(
                         RoundedRectangle(cornerRadius: 20, style: .continuous)
                             .fill(Color.white)
+                            .shadow(radius: 5)
                     )
-                    .shadow(radius: 5)
                 }
                 .buttonStyle(.plain)
                 .padding(.horizontal, 24)
@@ -79,17 +78,18 @@ struct buttonsView: View {
                     .background(
                         RoundedRectangle(cornerRadius: 20, style: .continuous)
                             .fill(Color.white)
+                            .shadow(radius: 5)
                     )
-                    .shadow(radius: 5)
-
                 }
                 .buttonStyle(.plain)
                 .padding(.horizontal, 24)
 
                 Spacer()
             }
+            .padding(.top,30)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color(uiColor: .systemGroupedBackground))
+            .navigationTitle("Home")
             .navigationDestination(isPresented: $showInsertManually) {
                 InsertManuallyView(
                     isPresented: $showInsertManually,

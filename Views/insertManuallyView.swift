@@ -23,7 +23,6 @@ struct InsertManuallyView: View {
                 .font(.largeTitle.bold())
                 .foregroundColor(.primary)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .shadow(radius: 10)
                 .padding(.horizontal, 32)
                 .padding(.top)
             
@@ -60,9 +59,9 @@ struct InsertManuallyView: View {
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 16)
-                    .background(Color(red: 65/255, green: 72/255, blue: 112/255))
+                    .background(Color(.blue))
                     .cornerRadius(30)
-                    .shadow(radius: 10)
+                    .shadow(radius: 5)
                     .padding(.horizontal, 100)
                     .padding(.bottom, 30)
             }
