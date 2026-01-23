@@ -28,12 +28,12 @@ struct TextCorrectionLoadingView: View {
             
             ZStack {
                 Circle()
-                    .fill(Color(red: 182/255, green: 212/255, blue: 177/255).opacity(0.2))
+                    .fill(Color(red: 65/255, green: 72/255, blue: 112/255).opacity(0.12))
                     .frame(width: 120, height: 120)
                 
                 Image(systemName: "sparkles")
                     .font(.system(size: 50))
-                    .foregroundColor(Color(red: 65/255, green: 112/255, blue: 72/255))
+                    .foregroundColor(Color(red: 65/255, green: 72/255, blue: 112/255))
                     .symbolEffect(.pulse, options: .repeating)
             }
             
@@ -50,7 +50,7 @@ struct TextCorrectionLoadingView: View {
             
             // Animated progressbar
             ProgressView(value: progressValue, total: 1.0)
-                .progressViewStyle(LinearProgressViewStyle(tint: Color(red: 182/255, green: 212/255, blue: 177/255)))
+                .progressViewStyle(LinearProgressViewStyle(tint: Color(red: 65/255, green: 72/255, blue: 112/255)))
                 .scaleEffect(x: 1, y: 2, anchor: .center)
                 .padding(.horizontal, 50)
                 .animation(.linear(duration: 0.3), value: progressValue)

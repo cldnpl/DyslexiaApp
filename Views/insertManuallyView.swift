@@ -21,7 +21,7 @@ struct InsertManuallyView: View {
             // Etichetta/Titolo
             Text("Write your text here:")
                 .font(.largeTitle.bold())
-                .foregroundColor(Color(red: 182/255, green: 212/255, blue: 177/255))
+                .foregroundColor(.primary)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .shadow(radius: 10)
                 .padding(.horizontal, 32)
@@ -31,7 +31,7 @@ struct InsertManuallyView: View {
             ZStack(alignment: .topLeading) {
                 // Background grigio chiaro per il riquadro con bordo
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(Color(red: 182/255, green: 212/255, blue: 177/255))
+                    .fill(Color(red: 248/255, green: 249/255, blue: 252/255))
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)
                             .stroke(Color.gray.opacity(0.3), lineWidth: 1)
@@ -57,10 +57,10 @@ struct InsertManuallyView: View {
             )) {
                 Text("Done")
                     .font(.title2.bold())
-                    .foregroundColor(.black)
+                    .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 16)
-                    .background(Color(red: 182/255, green: 212/255, blue: 177/255))
+                    .background(Color(red: 65/255, green: 72/255, blue: 112/255))
                     .cornerRadius(30)
                     .shadow(radius: 10)
                     .padding(.horizontal, 100)
@@ -68,7 +68,7 @@ struct InsertManuallyView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(red: 65/255, green: 112/255, blue: 72/255))
+        .background(Color.white)
         .gesture(
             DragGesture(minimumDistance: 50)
                 .onEnded { value in

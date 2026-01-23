@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct firstPageView: View {
+struct buttonsView: View {
     @Binding var selectedTab: Int
     @State private var showSourceSelection = false
     @State private var showCamera = false
@@ -20,31 +20,76 @@ struct firstPageView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 20){
+            VStack(spacing: 20) {
                 Spacer()
                 
-                ActionButton(
-                    iconName: "camera",
-                    title: "Scan your text",
-                    action: {
-                        showSourceSelection = true
+                // Card: Scan your text
+                Button(action: { showSourceSelection = true }) {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Image(systemName: "camera")
+                                .font(.system(size: 70))
+                                .foregroundColor(.blue)
+                            Text("Scan your text")
+                                .font(.system(size: 40).bold())
+                                .font(.largeTitle.bold())
+                                .foregroundColor(.black)
+                            Text("Open the camera, select a photo or a file...and let the app help you")
+                                .font(.system(size: 15))
+                                .font(.subheadline)
+                                .foregroundColor(Color.gray.opacity(0.6))
+                                .multilineTextAlignment(.leading)
+                        }
+                        Spacer()
                     }
-                )
-                .shadow(radius: 10)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 28)
+                    .padding(.horizontal, 24)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                            .fill(Color.white)
+                    )
+                    .shadow(radius: 5)
+                }
+                .buttonStyle(.plain)
+                .padding(.horizontal, 24)
                 
-                ActionButton(
-                    iconName: "pencil.and.scribble",
-                    title: "Insert manually",
-                    action: {
-                        showInsertManually = true
+                // Card: Insert manually
+                Button(action: { showInsertManually = true }) {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Image(systemName: "pencil.and.scribble")
+                                .font(.system(size: 70))
+                                .foregroundColor(.blue)
+                            Text("Insert manually")
+                                .font(.system(size: 40).bold())
+                                .font(.largeTitle.bold())
+                                .foregroundColor(.black)
+                            Text("Type and correct your test by yourself")
+                                .font(.subheadline)
+                                .font(.system(size: 15))
+                                .foregroundColor(Color.gray.opacity(0.6))
+                                .multilineTextAlignment(.leading)
+                        }
+                        Spacer()
                     }
-                )
-                .shadow(radius: 10)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 28)
+                    .padding(.horizontal, 24)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                            .fill(Color.white)
+                    )
+                    .shadow(radius: 5)
+
+                }
+                .buttonStyle(.plain)
+                .padding(.horizontal, 24)
 
                 Spacer()
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color(red: 65/255, green: 112/255, blue: 72/255))
+            .background(Color(uiColor: .systemGroupedBackground))
             .navigationDestination(isPresented: $showInsertManually) {
                 InsertManuallyView(
                     isPresented: $showInsertManually,
@@ -162,5 +207,5 @@ struct firstPageView: View {
     }
 }
 #Preview {
-    firstPageView(selectedTab: .constant(0))
+    buttonsView(selectedTab: .constant(0))
 }

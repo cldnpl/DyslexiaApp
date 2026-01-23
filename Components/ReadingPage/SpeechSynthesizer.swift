@@ -8,10 +8,13 @@
 import Foundation
 import AVFoundation
 import Combine
+import NaturalLanguage
 
 // speechsynthesizer gestisce lettura testo
 class SpeechSynthesizer: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
     private let synthesizer = AVSpeechSynthesizer() //synthesizer è colui che legge, AVSpeech etc è il lettore di Apple
+    private var detectedLanguage: String = "en-US" // Lingua rilevata, default inglese
+    
     @Published var isPlaying = false
     @Published var isPaused = false
     @Published var currentWordIndex: Int = 0
@@ -34,6 +37,9 @@ class SpeechSynthesizer: NSObject, ObservableObject, AVSpeechSynthesizerDelegate
     }
     
     func setupText(_ text: String) {
+        // Rileva la lingua del testo
+        detectedLanguage = detectLanguage(text)
+        
         fullText = text
         words = text.components(separatedBy: CharacterSet.whitespacesAndNewlines.union(.punctuationCharacters))
             .filter { !$0.isEmpty && $0.trimmingCharacters(in: .whitespaces).count > 0 }
@@ -72,6 +78,65 @@ class SpeechSynthesizer: NSObject, ObservableObject, AVSpeechSynthesizerDelegate
         onWordChanged?(index)
     }
     
+    /// Rileva la lingua del testo usando Natural Language Framework
+    private func detectLanguage(_ text: String) -> String {
+        let recognizer = NLLanguageRecognizer()
+        recognizer.processString(text)
+        
+        if let dominantLanguage = recognizer.dominantLanguage {
+            let langCode = dominantLanguage.rawValue
+            
+            let languageMap: [String: String] = [
+                "en": "en-US",
+                "it": "it-IT",
+                "es": "es-ES",
+                "fr": "fr-FR",
+                "de": "de-DE",
+                "pt": "pt-BR",
+                "zh-Hans": "zh-CN",
+                "zh-Hant": "zh-TW",
+                "ja": "ja-JP",
+                "ko": "ko-KR",
+                "ru": "ru-RU",
+                "ar": "ar-SA",
+                "hi": "hi-IN",
+                "nl": "nl-NL",
+                "pl": "pl-PL",
+                "tr": "tr-TR",
+                "sv": "sv-SE",
+                "da": "da-DK",
+                "no": "nb-NO",
+                "fi": "fi-FI",
+                "cs": "cs-CZ",
+                "hu": "hu-HU",
+                "ro": "ro-RO",
+                "el": "el-GR",
+                "he": "he-IL",
+                "th": "th-TH",
+                "vi": "vi-VN",
+                "id": "id-ID"
+            ]
+            
+            if let mapped = languageMap[langCode] {
+                return mapped
+            }
+            
+            if langCode.contains("-") {
+                return langCode
+            }
+            
+            let availableVoices = AVSpeechSynthesisVoice.speechVoices()
+            for voice in availableVoices {
+                if voice.language.hasPrefix(langCode) {
+                    return voice.language
+                }
+            }
+        }
+        
+        // Fallback: inglese (default)
+        return "en-US"
+    }
+    
     func speak(text: String, rate: Float) {
         stop()
         setupText(text)
@@ -79,7 +144,14 @@ class SpeechSynthesizer: NSObject, ObservableObject, AVSpeechSynthesizerDelegate
         
         let utterance = AVSpeechUtterance(string: text)
         utterance.rate = rate
-        utterance.voice = AVSpeechSynthesisVoice(language: "it-IT")
+        
+        // Usa la lingua rilevata automaticamente
+        if let voice = AVSpeechSynthesisVoice(language: detectedLanguage) {
+            utterance.voice = voice
+        } else {
+            // Fallback se la voce non è disponibile
+            utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
+        }
         
         currentUtterance = utterance
         synthesizer.speak(utterance)
@@ -103,12 +175,25 @@ class SpeechSynthesizer: NSObject, ObservableObject, AVSpeechSynthesizerDelegate
         }
     }
     
-    func resume() {
+    func resume(rate: Float? = nil) {
         if synthesizer.isPaused {
-            synthesizer.continueSpeaking()
-            isPlaying = true
-            isPaused = false
-            onPlaybackStateChanged?(true)
+            // Se viene fornita una velocità, riprendi sempre dalla parola corrente con quella velocità
+            // Questo assicura che se la velocità è stata cambiata durante la pausa, venga applicata
+            if let newRate = rate {
+                currentRate = newRate
+                let currentIndex = currentWordIndex
+                stop()
+                // Riprendi dalla parola corrente con la nuova velocità
+                if currentIndex < originalWords.count {
+                    jumpToWord(at: currentIndex, shouldResume: true)
+                }
+            } else {
+                // Se non viene fornita una velocità, continua semplicemente dalla pausa
+                synthesizer.continueSpeaking()
+                isPlaying = true
+                isPaused = false
+                onPlaybackStateChanged?(true)
+            }
         }
     }
     
@@ -149,10 +234,20 @@ class SpeechSynthesizer: NSObject, ObservableObject, AVSpeechSynthesizerDelegate
         jumpToWord(at: newIndex)
     }
     
-    private func jumpToWord(at index: Int) {
+    /// Cambia la velocità di lettura e ferma la lettura senza ricominciare
+    func changeSpeed(rate: Float) {
+        currentRate = rate
+        
+        // Se stava leggendo, ferma senza ricominciare
+        if isPlaying || isPaused {
+            pause()
+        }
+    }
+    
+    private func jumpToWord(at index: Int, shouldResume: Bool = false) {
         guard index < originalWords.count && index >= 0 else { return }
         
-        let wasPlaying = isPlaying
+        let wasPlaying = isPlaying || shouldResume
         stop()
         
         // Salva l'indice di partenza per mappare correttamente
@@ -186,7 +281,15 @@ class SpeechSynthesizer: NSObject, ObservableObject, AVSpeechSynthesizerDelegate
             if wasPlaying {
                 let utterance = AVSpeechUtterance(string: remainingText)
                 utterance.rate = currentRate
-                utterance.voice = AVSpeechSynthesisVoice(language: "it-IT")
+                
+                // Usa la lingua rilevata automaticamente
+                if let voice = AVSpeechSynthesisVoice(language: detectedLanguage) {
+                    utterance.voice = voice
+                } else {
+                    // Fallback se la voce non è disponibile
+                    utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
+                }
+                
                 currentUtterance = utterance
                 synthesizer.speak(utterance)
                 isPlaying = true
@@ -238,3 +341,4 @@ class SpeechSynthesizer: NSObject, ObservableObject, AVSpeechSynthesizerDelegate
         }
     }
 }
+

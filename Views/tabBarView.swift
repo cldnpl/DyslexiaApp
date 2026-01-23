@@ -13,7 +13,7 @@ struct tabBarView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             // 1 tab - Home
-            firstPageView(selectedTab: $selectedTab)
+            buttonsView(selectedTab: $selectedTab)
                 .tabItem {
                     Image(systemName: "house.fill")
                     Text("Home")
@@ -22,6 +22,8 @@ struct tabBarView: View {
             
             // 2 tab - Saved
             Text("Saved page")
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color(uiColor: .systemGroupedBackground))
                 .tabItem {
                     Image(systemName: "bookmark.fill")
                     Text("Saved")
@@ -29,17 +31,17 @@ struct tabBarView: View {
                 .tag(1)
             
             // 3 tab - Settings
-            Text("Setting Page")
-                .font(.largeTitle)
+            SettingsView()
                 .tabItem {
                     Image(systemName: "gearshape")
                     Text("Settings")
                 }
                 .tag(2)
         }
-        .tint(Color(red: 65/255, green: 112/255, blue: 72/255))
-        .toolbarBackground(Color(red: 182/255, green: 212/255, blue: 177/255), for: .tabBar)
+        .tint(Color(.blue))
+        .toolbarBackground(Color.white, for: .tabBar)
         .toolbarBackground(.visible, for: .tabBar)
+        .background(Color(uiColor: .systemGroupedBackground))
     }
        
 }

@@ -19,7 +19,7 @@ struct ReadingView: View {
     
     // Converti readingSpeed (0.0-1.0) a AVSpeechUtterance rate (0.0-1.0)
     private var speechRate: Float {
-        return Float(0.3 + (readingSpeed * 0.3))
+        return Float(0.05 + (readingSpeed * 0.8))
     }
     
     var body: some View {
@@ -27,26 +27,18 @@ struct ReadingView: View {
             // Slider per la velocità
             HStack(spacing: 15) {
                 Image(systemName: "tortoise.fill")
-                    .foregroundColor(Color(red: 182/255, green: 212/255, blue: 177/255))
+                    .foregroundColor(Color(red: 65/255, green: 72/255, blue: 112/255))
                     .font(.title2)
                 
                 Slider(value: $readingSpeed, in: 0.0...1.0)
-                    .tint(Color(red: 182/255, green: 212/255, blue: 177/255))
+                    .tint(Color(red: 65/255, green: 72/255, blue: 112/255))
                     .onChange(of: readingSpeed) { newValue in
-                        if speechSynthesizer.isPlaying {
-                            let wasPlaying = speechSynthesizer.isPlaying
-                            let currentIndex = speechSynthesizer.currentWordIndex
-                            speechSynthesizer.stop()
-                            if wasPlaying && currentIndex < speechSynthesizer.words.count {
-                                let remainingWords = Array(speechSynthesizer.words[currentIndex...])
-                                let remainingText = remainingWords.joined(separator: " ")
-                                speechSynthesizer.speak(text: remainingText, rate: speechRate)
-                            }
-                        }
+                        // Cambia la velocità e riprende dalla posizione corrente se stava leggendo
+                        speechSynthesizer.changeSpeed(rate: speechRate)
                     }
                 
                 Image(systemName: "hare.fill")
-                    .foregroundColor(Color(red: 182/255, green: 212/255, blue: 177/255))
+                    .foregroundColor(Color(red: 65/255, green: 72/255, blue: 112/255))
                     .font(.title2)
             }
             .shadow(radius: 10)
@@ -59,7 +51,7 @@ struct ReadingView: View {
             ZStack(alignment: .topLeading) {
                 // Background con bordo come in insertManuallyView
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(Color(red: 182/255, green: 212/255, blue: 177/255))
+                    .fill(Color(red: 248/255, green: 249/255, blue: 252/255))
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)
                             .stroke(Color.gray.opacity(0.3), lineWidth: 1)
@@ -92,7 +84,7 @@ struct ReadingView: View {
                         .font(.title2)
                         .foregroundColor(.black)
                         .frame(width: 50, height: 50)
-                        .background(Color(red: 182/255, green: 212/255, blue: 177/255))
+                        .background(Color(red: 248/255, green: 249/255, blue: 252/255))
                         .clipShape(Circle())
                 }
                 
@@ -101,7 +93,7 @@ struct ReadingView: View {
                     if speechSynthesizer.isPlaying {
                         speechSynthesizer.pause()
                     } else if speechSynthesizer.isPaused {
-                        speechSynthesizer.resume()
+                        speechSynthesizer.resume(rate: speechRate)
                     } else {
                         speechSynthesizer.setupText(textToRead)
                         speechSynthesizer.speak(text: textToRead, rate: speechRate)
@@ -111,7 +103,7 @@ struct ReadingView: View {
                         .font(.title)
                         .foregroundColor(.black)
                         .frame(width: 70, height: 70)
-                        .background(Color(red: 182/255, green: 212/255, blue: 177/255))
+                        .background(Color(red: 248/255, green: 249/255, blue: 252/255))
                         .clipShape(Circle())
                 }
                 
@@ -119,19 +111,19 @@ struct ReadingView: View {
                 Button(action: {
                     speechSynthesizer.stop()
                     speechSynthesizer.setupText(textToRead)
-                    speechSynthesizer.speak(text: textToRead, rate: speechRate)
+                    updateHighlightedText()
                 }) {
                     Image(systemName: "arrow.counterclockwise")
                         .font(.title2)
                         .foregroundColor(.black)
                         .frame(width: 50, height: 50)
-                        .background(Color(red: 182/255, green: 212/255, blue: 177/255))
+                        .background(Color(red: 248/255, green: 249/255, blue: 252/255))
                         .clipShape(Circle())
                 }
             }
             .padding(.bottom, 40)
         }
-        .background(Color(red: 65/255, green: 112/255, blue: 72/255))
+        .background(Color.white)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .tabBar)
