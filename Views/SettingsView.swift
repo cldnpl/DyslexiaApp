@@ -98,7 +98,7 @@ struct SettingsView: View {
                     .font(.subheadline)
                     .multilineTextAlignment(.leading)
                     .foregroundColor(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.horizontal, 30)
                     .padding(.top, 8)
                     .padding(.bottom, 60)

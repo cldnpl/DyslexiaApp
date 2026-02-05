@@ -146,7 +146,7 @@ struct SourceSelectionSheet: View {
             Spacer()
                 .frame(height: 40)
         }
-        .presentationDetents([.medium])
+        .presentationDetents([UIDevice.current.userInterfaceIdiom == .pad ? .large : .medium])
         .presentationDragIndicator(.visible)
     }
 }

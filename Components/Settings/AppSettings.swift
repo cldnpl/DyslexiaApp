@@ -95,16 +95,13 @@ class AppSettings: ObservableObject, @unchecked Sendable {
         }
     }
     
+    @MainActor
     var isDarkMode: Bool {
         // Use main window trait collection if available
         if let windowScene = UIApplication.shared.connectedScenes
             .compactMap({ $0 as? UIWindowScene })
             .first(where: { $0.activationState == .foregroundActive }),
            let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
-            return window.traitCollection.userInterfaceStyle == .dark
-        }
-        // Fallback: check all available windows
-        if let window = UIApplication.shared.windows.first {
             return window.traitCollection.userInterfaceStyle == .dark
         }
         // Last fallback: check current trait collection
@@ -181,6 +178,7 @@ class AppSettings: ObservableObject, @unchecked Sendable {
         return systemBodySize * scaleFactor
     }
     
+    @MainActor
     var shouldUseBoldText: Bool {
         return boldText || UIAccessibility.isBoldTextEnabled
     }
@@ -382,6 +380,7 @@ class AppSettings: ObservableObject, @unchecked Sendable {
     
     // Helper to get Font directly (like in Leap)
     // Now respects system accessibility settings
+    @MainActor
     func customFont(size: CGFloat, weight: Font.Weight = .regular) -> Font {
         // Calculate dynamic size based on requested size
         let systemBodySize = UIFont.preferredFont(forTextStyle: .body).pointSize

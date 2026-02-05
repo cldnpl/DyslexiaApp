@@ -19,7 +19,6 @@ struct SavedView: View {
     @StateObject private var settings = AppSettings.shared
     @StateObject private var store: SavedStore = .shared
     @State private var readingPresentedHack: Bool = true
-    @State private var selectedItemId: UUID?
 
     private var sections: [MonthSection] {
         let calendar = Calendar.current
@@ -54,27 +53,10 @@ struct SavedView: View {
                 ForEach(sections) { section in
                     Section {
                         ForEach(section.items) { item in
-                            ZStack {
-                                NavigationLink(
-                                    destination: ReadingView(
-                                        isPresented: $readingPresentedHack,
-                                        selectedTab: $selectedTab,
-                                        textToRead: item.fullText
-                                    ),
-                                    tag: item.id,
-                                    selection: $selectedItemId
-                                ) {
-                                    EmptyView()
-                                }
-                                .opacity(0)
-                                
-                                Button {
-                                    selectedItemId = item.id
-                                } label: {
-                                    SavedCard(item: item)
-                                }
-                                .buttonStyle(.plain)
+                            NavigationLink(value: item) {
+                                SavedCard(item: item)
                             }
+                            .buttonStyle(.plain)
                             .listRowSeparator(.hidden)
                             .listRowBackground(Color.clear)
                             .listRowInsets(EdgeInsets(top: 8, leading: 24, bottom: 8, trailing: 24))
@@ -101,6 +83,13 @@ struct SavedView: View {
             .background(Color(uiColor: .systemGroupedBackground))
             .navigationTitle("Saved Texts")
             .navigationBarTitleDisplayMode(.large)
+            .navigationDestination(for: SavedItem.self) { item in
+                ReadingView(
+                    isPresented: $readingPresentedHack,
+                    selectedTab: $selectedTab,
+                    textToRead: item.fullText
+                )
+            }
         }
     }
 }

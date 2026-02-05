@@ -93,7 +93,7 @@ struct DyslexiaInfoSheet: View {
             }
             .navigationTitle("Identifying Dyslexia")
         }
-        .presentationDetents([.medium])
+        .presentationDetents([UIDevice.current.userInterfaceIdiom == .pad ? .large : .medium])
         .presentationDragIndicator(.visible)
     }
     
