@@ -63,7 +63,7 @@ struct SavedView: View {
                             .contentShape(Rectangle())
                             .listRowSeparator(.hidden)
                             .listRowBackground(Color.clear)
-                            .listRowInsets(EdgeInsets(top: 8, leading: 24, bottom: 8, trailing: 24))
+                            .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 24))
                             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                 Button {
                                     store.delete(id: item.id)
@@ -112,12 +112,12 @@ private struct SavedCard: View {
         HStack(alignment: .center, spacing: 14) {
             VStack(alignment: .leading, spacing: 8) {
                 Text(item.title)
-                    .font(settings.customFont(size: settings.textSize * 2.0, weight: .bold))
+                    .font(settings.customFont(size: settings.textSize * 1.7, weight: .bold))
                     .foregroundColor(.primary)
                     .lineLimit(1)
 
                 Text(item.preview)
-                    .font(settings.customFont(size: settings.textSize * 1.05, weight: .regular))
+                    .font(settings.customFont(size: settings.textSize * 0.95, weight: .regular))
                     .foregroundColor(.secondary)
                     .lineLimit(1)
             }

@@ -33,7 +33,7 @@ struct InsertManuallyView: View {
             ZStack(alignment: .topLeading) {
                 // Light gray background for bordered box
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(settings.textFieldBackgroundColor)
+                    .fill(adaptiveTextFieldBackground)
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)
                             .stroke(Color(uiColor: .separator), lineWidth: 1)
@@ -99,6 +99,12 @@ struct InsertManuallyView: View {
                 isTextFieldFocused = true
             }
         }
+    }
+
+    private var adaptiveTextFieldBackground: Color {
+        settings.isDarkMode
+            ? Color(uiColor: .secondarySystemGroupedBackground)
+            : settings.textFieldBackgroundColor
     }
 }
 

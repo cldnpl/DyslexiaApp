@@ -35,6 +35,12 @@ struct ReadingView: View {
     private var isSaved: Bool {
         savedStore.items.contains { $0.fullText == trimmedTextToRead }
     }
+
+    private var adaptiveTextFieldBackground: Color {
+        settings.isDarkMode
+            ? Color(uiColor: .secondarySystemGroupedBackground)
+            : settings.textFieldBackgroundColor
+    }
     
     var body: some View {
         VStack(spacing: 20) {
@@ -67,17 +73,17 @@ struct ReadingView: View {
                     .stroke(Color(uiColor: .separator).opacity(0.5), lineWidth: 0.5)
             )
             .padding(.horizontal, 30)
-            .padding(.bottom, 40)
-            .padding(.top, 30)
+            .padding(.bottom, 16)
+            .padding(.top, 24)
 
             Spacer()
-                .frame(maxHeight: 5)
+                .frame(maxHeight: 2)
             
             // Card con il testo
             ZStack(alignment: .topLeading) {
                 // Background che si adatta al light/dark mode e al colore personalizzato
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(settings.textFieldBackgroundColor)
+                    .fill(adaptiveTextFieldBackground)
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)
                             .stroke(Color(uiColor: .separator), lineWidth: 1)
@@ -233,27 +239,19 @@ struct ReadingView: View {
                         .font(settings.customFont(size: settings.textSize, weight: settings.boldText ? .bold : .regular))
                         .foregroundColor(settings.textColor)
                         .padding(12)
-                        .background(settings.textFieldBackgroundColor)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color(uiColor: .separator), lineWidth: 1)
-                        )
+                        .background(adaptiveTextFieldBackground)
+                        .scrollContentBackground(.hidden)
                         .cornerRadius(12)
                         .padding(.horizontal, 16)
                         .padding(.top, 12)
                     
                     Spacer()
                 }
-                .navigationTitle("Modifica testo")
+                .navigationTitle("Edit Text")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button("Annulla") {
-                            showEditSheet = false
-                        }
-                    }
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("Salva") {
+                        Button {
                             let newText = editText
                             textToRead = newText
                             highlightedText = AttributedString(textToRead)
@@ -261,6 +259,9 @@ struct ReadingView: View {
                             speechSynthesizer.setupText(textToRead)
                             updateHighlightedText()
                             showEditSheet = false
+                        } label: {
+                            Image(systemName: "checkmark")
+                                .font(.system(size: 16, weight: .semibold))
                         }
                     }
                 }
