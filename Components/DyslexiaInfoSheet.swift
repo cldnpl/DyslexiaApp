@@ -93,7 +93,7 @@ struct DyslexiaInfoSheet: View {
             }
             .navigationTitle("Identifying Dyslexia")
         }
-        .presentationDetents([UIDevice.current.userInterfaceIdiom == .pad ? .large : .medium])
+        .presentationDetents([UIDevice.current.userInterfaceIdiom == .pad ? .large : .fraction(0.7)])
         .presentationDragIndicator(.visible)
     }
     
@@ -101,8 +101,25 @@ struct DyslexiaInfoSheet: View {
         HStack(alignment: .top, spacing: 8) {
             Text("•")
                 .font(settings.customFont(size: settings.textSize, weight: settings.boldText ? .bold : .regular))
+            bulletText(text)
+        }
+    }
+
+    @ViewBuilder
+    private func bulletText(_ text: String) -> some View {
+        let regularFont = settings.customFont(size: settings.textSize, weight: settings.boldText ? .bold : .regular)
+        let boldFont = settings.customFont(size: settings.textSize, weight: .bold)
+        let parts = text.split(separator: ":", maxSplits: 1, omittingEmptySubsequences: false)
+        if parts.count == 2 {
+            let subtitle = String(parts[0]).trimmingCharacters(in: .whitespaces)
+            let body = String(parts[1]).trimmingCharacters(in: .whitespaces)
+            Text(subtitle + ": ")
+                .font(boldFont)
+            + Text(body)
+                .font(regularFont)
+        } else {
             Text(text)
-                .font(settings.customFont(size: settings.textSize, weight: settings.boldText ? .bold : .regular))
+                .font(regularFont)
         }
     }
 }

@@ -53,10 +53,14 @@ struct SavedView: View {
                 ForEach(sections) { section in
                     Section {
                         ForEach(section.items) { item in
-                            NavigationLink(value: item) {
+                            ZStack {
                                 SavedCard(item: item)
+                                NavigationLink(value: item) {
+                                    EmptyView()
+                                }
+                                .opacity(0)
                             }
-                            .buttonStyle(.plain)
+                            .contentShape(Rectangle())
                             .listRowSeparator(.hidden)
                             .listRowBackground(Color.clear)
                             .listRowInsets(EdgeInsets(top: 8, leading: 24, bottom: 8, trailing: 24))
