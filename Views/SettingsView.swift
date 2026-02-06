@@ -75,7 +75,7 @@ struct SettingsView: View {
                     Button(action: {
                         showAboutMe = true
                     }) {
-                        HStack(alignment: .center) {
+                        HStack {
                             Text("About me")
                                 .font(settings.customFont(size: settings.textSize, weight: settings.boldText ? .bold : .regular))
                                 .foregroundColor(.primary)
@@ -86,22 +86,26 @@ struct SettingsView: View {
                                 .foregroundColor(.secondary)
                                 .font(.system(size: 14, weight: .semibold))
                         }
-                        .frame(minHeight: max(44, settings.textSize * 2.1), alignment: .center)
                     }
                     .buttonStyle(.plain)
                 }
                 }
                 .scrollContentBackground(.hidden)
-                .padding(.top, 24)
+                .scrollDisabled(true)
+                .frame(height: 260)
+                .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+                .padding(.horizontal, 5)
+                .padding(.top, 10)
 
                 Text("This app follows the accessibility settings on your iPhone.")
                     .font(.subheadline)
                     .multilineTextAlignment(.leading)
                     .foregroundColor(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.horizontal, 30)
-                    .padding(.top, 8)
-                    .padding(.bottom, 60)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 24)
+                    .padding(.top, -25)
+                    .padding(.leading, 7)
+                    .fixedSize(horizontal: false, vertical: true)
              
                 Spacer()
                 
