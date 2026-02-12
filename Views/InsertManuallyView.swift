@@ -42,7 +42,7 @@ struct InsertManuallyView: View {
                 
                 TextEditor(text: $inputText)
                     .font(settings.customFont(size: settings.textSize, weight: settings.boldText ? .bold : .regular))
-                    .foregroundColor(settings.textColor)
+                    .foregroundColor(settings.optimalTextFieldTextColor)
                     .focused($isTextFieldFocused)
                     .frame(minHeight: 300)
                     .scrollContentBackground(.hidden)
@@ -102,9 +102,7 @@ struct InsertManuallyView: View {
     }
 
     private var adaptiveTextFieldBackground: Color {
-        settings.isDarkMode
-            ? Color(uiColor: .secondarySystemGroupedBackground)
-            : settings.textFieldBackgroundColor
+        settings.textFieldBackgroundColor
     }
 }
 

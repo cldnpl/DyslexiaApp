@@ -108,6 +108,13 @@ class AppSettings: ObservableObject, @unchecked Sendable {
         return UITraitCollection.current.userInterfaceStyle == .dark
     }
     
+    // Colore del testo ottimale per il textFieldBackgroundColor basato sul contrasto
+    var optimalTextFieldTextColor: Color {
+        let backgroundColor = UIColor(textFieldBackgroundColor)
+        let optimalColor = Self.calculateOptimalTextColor(for: backgroundColor)
+        return Color(optimalColor)
+    }
+    
     // Helper to update UI when color scheme changes
     func updateForColorSchemeChange() {
         objectWillChange.send()

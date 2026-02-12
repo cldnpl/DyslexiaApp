@@ -37,9 +37,7 @@ struct ReadingView: View {
     }
 
     private var adaptiveTextFieldBackground: Color {
-        settings.isDarkMode
-            ? Color(uiColor: .secondarySystemGroupedBackground)
-            : settings.textFieldBackgroundColor
+        settings.textFieldBackgroundColor
     }
     
     var body: some View {
@@ -237,7 +235,7 @@ struct ReadingView: View {
                 VStack(spacing: 16) {
                     TextEditor(text: $editText)
                         .font(settings.customFont(size: settings.textSize, weight: settings.boldText ? .bold : .regular))
-                        .foregroundColor(settings.textColor)
+                        .foregroundColor(settings.optimalTextFieldTextColor)
                         .padding(12)
                         .background(adaptiveTextFieldBackground)
                         .scrollContentBackground(.hidden)
