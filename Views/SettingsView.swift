@@ -102,9 +102,8 @@ struct SettingsView: View {
                     .multilineTextAlignment(.leading)
                     .foregroundColor(.secondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal, 24)
-                    .padding(.top, -25)
-                    .padding(.leading, 7)
+                    .padding(.horizontal, 20)
+                    .padding(.top, -6)
                     .fixedSize(horizontal: false, vertical: true)
              
                 Spacer()

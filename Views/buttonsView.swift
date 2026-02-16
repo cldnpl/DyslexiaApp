@@ -88,7 +88,7 @@ struct buttonsView: View {
                                 .fill(Color(uiColor: .secondarySystemGroupedBackground))
                                 .shadow(radius: 5)
                         )
-                    }
+                   }
                     .buttonStyle(.plain)
                     .padding(.horizontal, 20)
                     
