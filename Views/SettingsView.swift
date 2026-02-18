@@ -88,14 +88,31 @@ struct SettingsView: View {
                         }
                     }
                     .buttonStyle(.plain)
+                    
+                    // Reset Colors Button
+                    Button(action: {
+                        settings.resetColorsToDefault()
+                    }) {
+                        HStack {
+                            Image(systemName: "arrow.counterclockwise")
+                                .foregroundColor(.secondary)
+                                .font(.system(size: 14, weight: .semibold))
+                            
+                            Text("Reset Colors")
+                                .font(settings.customFont(size: settings.textSize, weight: settings.boldText ? .bold : .regular))
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .buttonStyle(.plain)
                 }
                 }
                 .scrollContentBackground(.hidden)
                 .scrollDisabled(true)
-                .frame(height: 260)
+                .frame(height: 300)
                 .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
                 .padding(.horizontal, 5)
                 .padding(.top, 10)
+                .padding(.bottom, settings.selectedFont.contains("OpenDyslexic") ? 0 : -8)
 
                 Text("This app follows the accessibility settings on your iPhone.")
                     .font(.subheadline)
@@ -103,7 +120,8 @@ struct SettingsView: View {
                     .foregroundColor(.secondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 20)
-                    .padding(.top, -6)
+                    .padding(.leading, 10)
+                    .padding(.top, 4)
                     .fixedSize(horizontal: false, vertical: true)
              
                 Spacer()
@@ -112,8 +130,8 @@ struct SettingsView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 200, height: 200)
-                    .padding(.vertical, 20)
-                    .offset(y: -50)
+                    .padding(.top, 0)
+                    .padding(.bottom, 20)
             }
             .background(Color(uiColor: .systemGroupedBackground))
 

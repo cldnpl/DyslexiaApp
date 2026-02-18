@@ -24,8 +24,11 @@ struct ReadingView: View {
     @Environment(\.dismiss) private var dismiss
     
     // Convert readingSpeed (0.0-1.0) to AVSpeechUtterance rate (0.0-1.0)
+    // Uses quadratic curve to slow down more when moving toward tortoise
     private var speechRate: Float {
-        return Float(0.05 + (readingSpeed * 0.8))
+        // Square the readingSpeed to create a curve that slows down more at lower values
+        let curvedSpeed = readingSpeed * readingSpeed
+        return Float(0.05 + (curvedSpeed * 0.8))
     }
     
     private var trimmedTextToRead: String {
@@ -37,7 +40,7 @@ struct ReadingView: View {
     }
 
     private var adaptiveTextFieldBackground: Color {
-        settings.textFieldBackgroundColor
+        settings.adaptiveTextFieldBackgroundColor
     }
     
     var body: some View {
@@ -77,9 +80,8 @@ struct ReadingView: View {
             Spacer()
                 .frame(maxHeight: 2)
             
-            // Card con il testo
+            // Card with text
             ZStack(alignment: .topLeading) {
-                // Background che si adatta al light/dark mode e al colore personalizzato
                 RoundedRectangle(cornerRadius: 12)
                     .fill(adaptiveTextFieldBackground)
                     .overlay(
@@ -89,7 +91,7 @@ struct ReadingView: View {
                     .frame(width: 340, height: 390)
                     .frame(minHeight: 200)
                 
-                // Testo con evidenziazione
+                // Text with highlighting
                 Group {
                     if #available(iOS 17.0, *) {
                         ScrollView {
@@ -114,6 +116,7 @@ struct ReadingView: View {
                         .scrollContentBackground(.hidden)
                     }
                 }
+                .padding(.top)
                 .frame(width: 340, height: 370)
                 .frame(minHeight: 200)
             }
@@ -121,9 +124,9 @@ struct ReadingView: View {
             
             Spacer()
             
-            // Controlli di riproduzione
+            // Playback controls
             HStack(spacing: 40) {
-                // Pulsante Bookmark
+                // Bookmark button
                 Button(action: {
                     saveTitle = ""
                     showSaveModal = true
@@ -134,11 +137,11 @@ struct ReadingView: View {
                         .frame(width: 50, height: 50)
                         .background(Color(uiColor: .secondarySystemGroupedBackground))
                         .clipShape(Circle())
-                        .shadow(radius: 5)
+                        .shadow(color: Color.black.opacity(settings.isDarkMode ? 0.3 : 0.12), radius: 5, x: 0, y: 2)
                 }
                 .disabled(isSaved)
                 
-                // Pulsante Play/Pause
+                // Play/Pause button
                 Button(action: {
                     if speechSynthesizer.isPlaying {
                         speechSynthesizer.pause()
@@ -155,7 +158,7 @@ struct ReadingView: View {
                         .frame(width: 70, height: 70)
                         .background(Color(uiColor: .secondarySystemGroupedBackground))
                         .clipShape(Circle())
-                        .shadow(radius: 5)
+                        .shadow(color: Color.black.opacity(settings.isDarkMode ? 0.3 : 0.12), radius: 5, x: 0, y: 2)
 
                 }
                 
@@ -171,7 +174,7 @@ struct ReadingView: View {
                         .frame(width: 50, height: 50)
                         .background(Color(uiColor: .secondarySystemGroupedBackground))
                         .clipShape(Circle())
-                        .shadow(radius: 5)
+                        .shadow(color: Color.black.opacity(settings.isDarkMode ? 0.3 : 0.12), radius: 5, x: 0, y: 2)
 
                 }
             }
@@ -202,14 +205,14 @@ struct ReadingView: View {
             }
         }
         .onAppear {
-            // Inizializza highlightedText con il testo normale
+            // Initialize highlightedText with normal text
             highlightedText = AttributedString(textToRead)
             updateHighlightedText()
             speechSynthesizer.onWordChanged = { index in
                 updateHighlightedText()
             }
             speechSynthesizer.onPlaybackStateChanged = { _ in
-                // UI aggiornata automaticamente tramite @Published
+                // UI automatically updated via @Published
             }
         }
         .onDisappear {
@@ -268,10 +271,10 @@ struct ReadingView: View {
     }
     
     private func updateHighlightedText() {
-        // Ricrea sempre l'AttributedString dal testo originale
+        // Always recreate AttributedString from original text
         var attributedString = AttributedString(textToRead)
         
-        // Evidenzia la parola corrente usando i range originali
+        // Highlight current word using original ranges
         if !speechSynthesizer.originalWordRanges.isEmpty &&
             speechSynthesizer.currentWordIndex < speechSynthesizer.originalWordRanges.count {
             let currentRange = speechSynthesizer.originalWordRanges[speechSynthesizer.currentWordIndex]

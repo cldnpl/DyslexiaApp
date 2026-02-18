@@ -54,7 +54,7 @@ struct buttonsView: View {
                         .background(
                             RoundedRectangle(cornerRadius: 20, style: .continuous)
                                 .fill(Color(uiColor: .secondarySystemGroupedBackground))
-                                .shadow(radius: 5)
+                                .shadow(color: Color.black.opacity(settings.isDarkMode ? 0.3 : 0.12), radius: 5, x: 0, y: 2)
                         )
                     }
                     .buttonStyle(.plain)
@@ -86,7 +86,7 @@ struct buttonsView: View {
                         .background(
                             RoundedRectangle(cornerRadius: 20, style: .continuous)
                                 .fill(Color(uiColor: .secondarySystemGroupedBackground))
-                                .shadow(radius: 5)
+                                .shadow(color: Color.black.opacity(settings.isDarkMode ? 0.3 : 0.12), radius: 5, x: 0, y: 2)
                         )
                    }
                     .buttonStyle(.plain)

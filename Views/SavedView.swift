@@ -138,7 +138,7 @@ private struct SavedCard: View {
                     RoundedRectangle(cornerRadius: 26, style: .continuous)
                         .stroke(Color(uiColor: .separator), lineWidth: 1)
                 )
-                .shadow(color: Color.black.opacity(0.12), radius: 10, x: 0, y: 6)
+                .shadow(color: Color.black.opacity(settings.isDarkMode ? 0.3 : 0.12), radius: 10, x: 0, y: 6)
         )
     }
 }

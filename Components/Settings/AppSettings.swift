@@ -82,7 +82,7 @@ class AppSettings: ObservableObject, @unchecked Sendable {
                 UserDefaults.standard.set(blue, forKey: Self.textFieldBackgroundColorKeyBlue)
                 UserDefaults.standard.set(alpha, forKey: Self.textFieldBackgroundColorKeyAlpha)
                 
-                // Calcola automaticamente il colore del testo in base al contrasto
+                // Automatically calculate text color based on contrast
                 let backgroundColor = UIColor(red: red, green: green, blue: blue, alpha: alpha)
                 let optimalTextColor = Self.calculateOptimalTextColor(for: backgroundColor)
                 self.textColor = Color(optimalTextColor)
@@ -108,15 +108,46 @@ class AppSettings: ObservableObject, @unchecked Sendable {
         return UITraitCollection.current.userInterfaceStyle == .dark
     }
     
-    // Colore del testo ottimale per il textFieldBackgroundColor basato sul contrasto
+    // Adaptive color for text fields that adapts to dark mode if it's the system color
+    @MainActor
+    var adaptiveTextFieldBackgroundColor: Color {
+        let isSystemColor = UserDefaults.standard.bool(forKey: Self.textFieldBackgroundColorKeyIsSystem)
+        
+        // If it's dark mode and the color is system, use a darker color
+        if isDarkMode && isSystemColor {
+            return Color(uiColor: .secondarySystemGroupedBackground)
+        }
+        
+        // Otherwise use the color chosen by the user (both custom and system in light mode)
+        return textFieldBackgroundColor
+    }
+    
+    // Optimal text color for the adaptive color based on contrast
+    @MainActor
     var optimalTextFieldTextColor: Color {
-        let backgroundColor = UIColor(textFieldBackgroundColor)
+        let backgroundColor = UIColor(adaptiveTextFieldBackgroundColor)
         let optimalColor = Self.calculateOptimalTextColor(for: backgroundColor)
         return Color(optimalColor)
     }
     
     // Helper to update UI when color scheme changes
     func updateForColorSchemeChange() {
+        objectWillChange.send()
+    }
+    
+    // Reset colors to default values
+    func resetColorsToDefault() {
+        // Reset accent color to blue
+        accentColor = .blue
+        
+        // Reset text field background color to system grouped background
+        textFieldBackgroundColor = Color(uiColor: .systemGroupedBackground)
+        UserDefaults.standard.set(true, forKey: Self.textFieldBackgroundColorKeyIsSystem)
+        
+        // Reset text color to primary (system)
+        textColor = .primary
+        UserDefaults.standard.set(true, forKey: Self.textColorKeyIsSystem)
+        
         objectWillChange.send()
     }
     
@@ -312,12 +343,12 @@ class AppSettings: ObservableObject, @unchecked Sendable {
         }
     }
     
-    // Funzione helper per ottenere il nome del font corretto da usare con Font.custom()
+    // Helper function to get the correct font name to use with Font.custom()
     func fontName(for weight: Font.Weight = .regular) -> String {
         return Self.fontName(for: weight, fontName: selectedFont)
     }
     
-    // Funzione helper statica per ottenere il nome del font corretto da una stringa
+    // Static helper function to get the correct font name from a string
     static func fontName(for weight: Font.Weight = .regular, fontName: String) -> String {
         if fontName == "System" {
             return "System"
@@ -343,7 +374,7 @@ class AppSettings: ObservableObject, @unchecked Sendable {
                 let isItalic = baseName.contains("Italic")
                 let isBold = (weight == .bold || weight == .semibold || weight == .heavy || weight == .black)
                 
-                // Cerca il font corretto
+                // Search for the correct font
                 if isItalic && isBold {
                     // Look for BoldItalic
                     if let found = fontNames.first(where: { $0.contains("Bold") && $0.contains("Italic") }) {
@@ -431,7 +462,7 @@ class AppSettings: ObservableObject, @unchecked Sendable {
         }
     }
     
-    // Calcola la luminosità relativa di un colore (formula WCAG)
+    // Calculate the relative luminance of a color (WCAG formula)
     private static func relativeLuminance(_ color: UIColor) -> CGFloat {
         var red: CGFloat = 0
         var green: CGFloat = 0
@@ -439,11 +470,11 @@ class AppSettings: ObservableObject, @unchecked Sendable {
         var alpha: CGFloat = 0
         
         guard color.getRed(&red, green: &green, blue: &blue, alpha: &alpha) else {
-            // Se non riesce a ottenere RGB, usa un valore di default
+            // If it fails to get RGB, use a default value
             return 0.5
         }
         
-        // Converti i valori RGB in luminosità relativa (formula WCAG)
+        // Convert RGB values to relative luminance (WCAG formula)
         func linearize(_ component: CGFloat) -> CGFloat {
             return component <= 0.03928
                 ? component / 12.92
@@ -457,7 +488,7 @@ class AppSettings: ObservableObject, @unchecked Sendable {
         return 0.2126 * r + 0.7152 * g + 0.0722 * b
     }
     
-    // Calcola il contrast ratio tra due colori (formula WCAG)
+    // Calculate the contrast ratio between two colors (WCAG formula)
     private static func contrastRatio(_ color1: UIColor, _ color2: UIColor) -> CGFloat {
         let l1 = relativeLuminance(color1)
         let l2 = relativeLuminance(color2)
@@ -468,7 +499,7 @@ class AppSettings: ObservableObject, @unchecked Sendable {
         return (lighter + 0.05) / (darker + 0.05)
     }
     
-    // Determina il colore del testo ottimale (bianco o nero) in base al contrasto
+    // Determine the optimal text color (white or black) based on contrast
     static func calculateOptimalTextColor(for backgroundColor: UIColor) -> UIColor {
         let white = UIColor.white
         let black = UIColor.black
@@ -476,7 +507,7 @@ class AppSettings: ObservableObject, @unchecked Sendable {
         let contrastWithWhite = contrastRatio(backgroundColor, white)
         let contrastWithBlack = contrastRatio(backgroundColor, black)
         
-        // Usa il colore con contrasto più alto
+        // Use the color with highest contrast
         return contrastWithWhite > contrastWithBlack ? white : black
     }
 }

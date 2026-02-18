@@ -65,7 +65,7 @@ struct InsertManuallyView: View {
                     .padding(.vertical, 16)
                     .background(settings.accentColor)
                     .cornerRadius(30)
-                    .shadow(radius: 5)
+                    .shadow(color: Color.black.opacity(settings.isDarkMode ? 0.3 : 0.12), radius: 5, x: 0, y: 2)
                     .padding(.horizontal, 100)
                     .padding(.bottom, 30)
             }
@@ -102,7 +102,7 @@ struct InsertManuallyView: View {
     }
 
     private var adaptiveTextFieldBackground: Color {
-        settings.textFieldBackgroundColor
+        settings.adaptiveTextFieldBackgroundColor
     }
 }
 

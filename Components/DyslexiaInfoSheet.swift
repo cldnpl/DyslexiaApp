@@ -78,7 +78,7 @@ struct DyslexiaInfoSheet: View {
                         )
                     }
                     
-                    // Immagine di Leggy con il libro
+                    // Image of Leggy with the book
                     HStack {
                         Spacer()
                         Image("bookLeggy")
