@@ -2,7 +2,7 @@
 //  OnboardingView.swift
 //  Leggy
 //
-//  Created by Auto on 02/02/26.
+//  Created by Claudia Napolitano on 02/02/26.
 //
 
 import SwiftUI

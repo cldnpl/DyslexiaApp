@@ -2,7 +2,7 @@
 //  SavedStore.swift
 //  Leggy
 //
-//  Created by Auto on 27/01/26.
+//  Created by Claudia Napolitano on 27/01/26.
 //
 
 import Foundation
