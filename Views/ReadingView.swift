@@ -180,6 +180,7 @@ struct ReadingView: View {
             }
             .padding(.bottom, 40)
         }
+        .adaptiveMaxWidth(700)
         .background(Color(uiColor: .systemBackground))
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)

@@ -133,6 +133,7 @@ struct SettingsView: View {
                     .padding(.top, 0)
                     .padding(.bottom, 20)
             }
+            .adaptiveMaxWidth(700)
             .background(Color(uiColor: .systemGroupedBackground))
 
             .navigationTitle("Settings")

@@ -102,6 +102,7 @@ struct buttonsView: View {
                 }
                 .padding(.top, 16)
                 .padding(.bottom, 8)
+                .adaptiveMaxWidth(700)
             }
             .scrollDisabled(true)
             .background(Color(uiColor: .systemGroupedBackground))

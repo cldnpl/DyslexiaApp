@@ -27,6 +27,7 @@ struct SwiftUIView: View {
                     .padding(.top, 20)
                     .padding(.bottom, 40)
             }
+            .adaptiveMaxWidth(700)
         }
         .navigationTitle("About Me")
         .navigationBarTitleDisplayMode(.large)

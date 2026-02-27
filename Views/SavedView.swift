@@ -84,6 +84,7 @@ struct SavedView: View {
             }
             .listStyle(.plain)
             .scrollContentBackground(.hidden)
+            .adaptiveMaxWidth(700)
             .background(Color(uiColor: .systemGroupedBackground))
             .navigationTitle("Saved Texts")
             .navigationBarTitleDisplayMode(.large)

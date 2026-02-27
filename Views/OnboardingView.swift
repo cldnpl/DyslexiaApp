@@ -106,6 +106,7 @@ struct OnboardingPageView: View {
             
             Spacer()
         }
+        .adaptiveMaxWidth(600)
     }
 }
 

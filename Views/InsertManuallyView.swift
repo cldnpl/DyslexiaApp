@@ -70,6 +70,7 @@ struct InsertManuallyView: View {
                     .padding(.bottom, 30)
             }
         }
+        .adaptiveMaxWidth(700)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(uiColor: .systemBackground))
         .gesture(
